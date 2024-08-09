@@ -63,13 +63,13 @@ include 'layout/navbar.php';
     </div>
 </section>
 
-<section class="pt-[40px] px-[93px]">
+<section id="wisata-terpopuler" class="pt-[40px] px-[93px]">
     <h2 class="font-bold text-3xl underline underline-offset-4 text-center">Wisata Terpopuler</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-[76px] mt-10">
         <?php foreach ($wisatas as $wisata): ?>
             <a href="/wisata/detail.php?id=<?= $wisata['id'] ?>" class="bg-[#95E681] h-full flex flex-col rounded-lg">
                 <img class="h-auto w-full rounded-t-lg flex-grow object-cover" src="/assets/image/<?= $wisata['gambar'] ?>"
-                    alt="Foto Pantai Teluk Tamiangx">
+                    alt="Foto Pantai Teluk Tamiang">
                 <p class="p-2 text-center font-bold text-xl text-white"><?= $wisata['nama'] ?></p>
             </a>
         <?php endforeach; ?>
@@ -77,33 +77,24 @@ include 'layout/navbar.php';
 
 </section>
 
-<section class="pt-[40px] px-[93px]">
+<section id="paket-wisata" class="pt-[40px] px-[93px]">
     <h2 class="font-bold text-3xl underline underline-offset-4 text-center">Paket Wisata</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-[76px] mt-10">
-        <div class="bg-[#95E681] h-full flex flex-col rounded-lg">
-            <img class="h-auto w-full rounded-t-lg flex-grow object-cover" src="/assets/image/pantai_teluk_tamiang.png"
-                alt="Foto Pantai Teluk Tamiang">
-            <p class="p-2 text-center font-bold text-xl text-white">Pantai Teluk Tamiang</p>
-        </div>
-        <div class="bg-[#95E681] h-full flex flex-col rounded-lg">
-            <img class="h-auto w-full rounded-t-lg flex-grow object-cover" src="/assets/image/siring.png"
-                alt="Foto Pantai Teluk Tamiang">
-            <p class="p-2 text-center font-bold text-xl text-white">Taman Siring 0 KM</p>
-        </div>
-        <div class="bg-[#95E681] h-full flex flex-col rounded-lg">
-            <img class="h-auto w-full rounded-t-lg flex-grow object-cover" src="/assets/image/pantai_teluk_tamiang.png"
-                alt="Foto Pantai Teluk Tamiangx">
-            <p class="p-2 text-center font-bold text-xl text-white">Pantai Teluk Tamiang</p>
-        </div>
+        <?php foreach ($wisatas as $wisata): ?>
+            <a href="/wisata/detail.php?id=<?= $wisata['id'] ?>" class="bg-[#95E681] h-full flex flex-col rounded-lg">
+                <img class="h-auto w-full rounded-t-lg flex-grow object-cover" src="/assets/image/<?= $wisata['gambar'] ?>"
+                    alt="Foto Pantai Teluk Tamiang">
+                <p class="p-2 text-center font-bold text-xl text-white"><?= $wisata['nama'] ?></p>
+            </a>
+        <?php endforeach; ?>
     </div>
-
     <div class="flex justify-center w-full mt-8">
         <button type="button"
             class="text-white bg-[#95E681] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">Selengkapnya</button>
     </div>
 </section>
 
-<section class="border-t-2 border-black mt-8 flex justify-center">
+<section id="berita-terbaru" class="border-t-2 border-black mt-8 flex justify-center">
     <div class="flex flex-col justify-center items-center px-20 w-1/2 border-r-[1px] border-black mt-10">
         <h2 class="font-bold text-3xl underline underline-offset-4 text-center">Berita Terbaru</h2>
         <iframe class="mt-4" width="560" height="315"
@@ -203,12 +194,11 @@ include 'layout/navbar.php';
                     </defs>
                 </svg>
 
-
                 <p>kawanbejalan_</p>
             </li>
         </ul>
     </div>
-    <div class="w-1/2 border-l-[1px] border-black mt-10">
+    <div id="review-wisata" class="w-1/2 border-l-[1px] border-black mt-10">
         <h2 class="font-bold text-3xl underline underline-offset-4 text-center">Review Wisata</h2>
         <div class="flex flex-col justify-center items-center px-20">
             <div class="flex space-x-10 mt-10">
@@ -248,12 +238,12 @@ include 'layout/navbar.php';
                 </div>
             </div>
             <div class="flex space-x-10 mt-10">
-                <img class="w-28 h-28 object-cover rounded-full" src="assets/image/review-1.png" alt="Rounded avatar">
+                <img class="w-28 h-28 object-cover rounded-full" src="assets/image/ghea.jfif" alt="Rounded avatar">
                 <div class="space-y-2">
-                    <h4 class="font-bold text-2xl">Pantai teluk Tamiang</h4>
-                    <p>I really like the view on Teluk Tamiang Beach, the water is very clear and makes me want to
-                        come back again for a holiday.
-                        Hye Sun - Korean</p>
+                    <h4 class="font-bold text-2xl">Bukit Tahura Sultan Adam</h4>
+                    <p>Sempat penasaran dengan Bukit Tahura yang tengah viral, Akhirnya saya dan teman-teman berlibur
+                        kesana dan wawww pagi harinya ada lautan awan di bukit ituu, sumpahh keren bangettt dehhh,
+                        pokoknya nanti mau kesana lagi !</p>
                     <div class="flex items-center">
                         <svg class="w-8 h-8 ms-3 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor" viewBox="0 0 22 20">
@@ -284,12 +274,11 @@ include 'layout/navbar.php';
                 </div>
             </div>
             <div class="flex space-x-10 mt-10">
-                <img class="w-28 h-28 object-cover rounded-full" src="assets/image/review-1.png" alt="Rounded avatar">
+                <img class="w-28 h-28 object-cover rounded-full" src="assets/image/cifa.webp" alt="Rounded avatar">
                 <div class="space-y-2">
-                    <h4 class="font-bold text-2xl">Pantai teluk Tamiang</h4>
-                    <p>I really like the view on Teluk Tamiang Beach, the water is very clear and makes me want to
-                        come back again for a holiday.
-                        Hye Sun - Korean</p>
+                    <h4 class="font-bold text-2xl">Susur Sungai</h4>
+                    <p>Ini pengalaman pertama kali saya berwisata “Susur Sungai” . Waktu itu saya sekitar jam setengah 6
+                        sore dan bisa menikmati senja yang indah, next kalau ke banjarmasin, mau naik lagi.</p>
                     <div class="flex items-center">
                         <svg class="w-8 h-8 ms-3 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor" viewBox="0 0 22 20">

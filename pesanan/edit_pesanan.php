@@ -1,45 +1,51 @@
 <?php
-include '../config/koneksi.php';
-
-$id = $_GET['wisata'];
-$query = mysqli_query($db, "SELECT * FROM wisata where id = $id");
-$wisata = mysqli_fetch_assoc($query);
-if (!$wisata) {
-    header('Location: /');
-}
+require '../config/koneksi.php';
 
 include '../layout/header.php';
 include '../layout/navbar.php';
+
+$id = $_GET['id'];
+
+$query = mysqli_query($db, "
+    SELECT p.*, w.nama AS nama_wisata, w.harga_transportasi, w.harga_penginapan, w.harga_makan
+    FROM pesanan p
+    JOIN wisata w ON p.wisata_id = w.id
+    WHERE p.id = '$id'
+");
+$pesanan = mysqli_fetch_assoc($query);
+
 ?>
+if ($pesanan) {
 <section class="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
     <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <div class="mx-auto max-w-5xl">
-            <h2
-                class="text-xl font-semibold text-gray-900 dark:text-white sm:text-3xl underline underline-offset-4 text-center">
-                Form Pemesanan Paket Wisata <?= $wisata['nama'] ?></h2>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-3xl underline underline-offset-4 text-center"
+                value="<?php echo $pesanan['id'] ?>">
+                Form Pemesanan Paket Wisata</h2>
 
             <div class="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12">
-                <form action="/pesanan/proses_pesanan.php" method="post"
+                <form action="/pesanan/editaksi_pesanan.php" method="post"
                     class="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6 lg:max-w-xl lg:p-8">
-                    <input type="hidden" id="post_transportasi" name="transportasi" value="">
-                    <input type="hidden" id="post_penginapan" name="penginapan" value="">
-                    <input type="hidden" id="post_makan" name="makan" value="">
-                    <input type="hidden" id="total_bayar" name="total_bayar" value="">
-                    <input type="hidden" id="wisata_id" name="wisata_id" value="<?= $wisata['id'] ?>">
+                    <input type="hidden" id="post_transportasi" name="transportasi"
+                        value="<?= $pesanan['transportasi'] ?>">
+                    <input type="hidden" id="post_penginapan" name="penginapan" value="<?= $pesanan['penginapan'] ?>">
+                    <input type="hidden" id="post_makan" name="makan" value="<?= $pesanan['makan'] ?>">
+                    <input type="hidden" id="total_bayar" name="total_bayar" value="<?= $pesanan['total_bayar'] ?>">
+                    <input type="hidden" id="wisata_id" name="wisata_id" value="<?= $pesanan['wisata_id'] ?>">
+                    <input type="hidden" id="id" name="id" value="<?= $pesanan['id'] ?>">
                     <div class="mb-6 grid grid-cols-1 gap-4">
                         <div class="col-span-2 sm:col-span-1">
                             <label for="nama_pemesan"
                                 class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Nama Pemesan
                             </label>
-                            <input type="text" id="nama_pemesan" name="nama_pemesan"
-                                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
-                                placeholder="Nama Lengkap..." required />
+                            <input type="text" name="nama_pemesan" value="<?php echo $pesanan['nama_pemesan'] ?>"
+                                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" />
                         </div>
 
                         <div class="col-span-2 sm:col-span-1">
                             <label for="nomor_hp" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                                 Nomor HP/Telp </label>
-                            <input type="tel" id="nomor_hp" name="nomor_hp"
+                            <input type="tel" id="nomor_hp" name="nomor_hp" value="<?php echo $pesanan['nomor_hp'] ?>"
                                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                                 placeholder="08xxxxx" required />
                         </div>
@@ -61,7 +67,7 @@ include '../layout/navbar.php';
                                 <input id="tanggal_pesan" name="tanggal_pesan" datepicker datepicker-format="yyyy/mm/dd"
                                     id="tanggal_pesan" type="text"
                                     class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-9 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                                    placeholder="12/23" required />
+                                    placeholder="12/23" required value="<?php echo $pesanan['tanggal_pesan'] ?>" />
                             </div>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
@@ -70,31 +76,34 @@ include '../layout/navbar.php';
                                 Perjalanan/hari </label>
                             <input type="number" id="waktu_perjalanan" name="waktu_perjalanan"
                                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
-                                placeholder="Waktu Perjalanan..." required />
+                                placeholder="Waktu Perjalanan..." required
+                                value="<?php echo $pesanan['waktu_perjalanan'] ?>" />
                         </div>
                         <div class="col-span-2 sm:col-span-1">
                             <div class="flex items-center mb-4">
                                 <input id="transportasi" type="checkbox" value=""
-                                    class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="transportasi" class="ms-2 text-sm font-bold text-[#95E681]">Transportasi
-                                    (Rp.
-                                    <?= number_format($wisata['harga_transportasi'], 0, ',', '.') ?>)</label>
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    <?= $pesanan['transportasi'] == 0 ? '' : 'checked' ?>>
+                                <label for="transportasi" class="ms-2 text-sm font-bold text-blue-400">Transportasi (Rp.
+                                    <?= number_format($pesanan['harga_transportasi'], 0, ',', '.') ?>)</label>
                             </div>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
                             <div class="flex items-center mb-4">
                                 <input id="penginapan" type="checkbox" value=""
-                                    class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="penginapan" class="ms-2 text-sm font-bold text-[#95E681]">Penginapan (Rp.
-                                    <?= number_format($wisata['harga_penginapan'], 0, ',', '.') ?>)</label>
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    <?= $pesanan['penginapan'] == 0 ? '' : 'checked' ?>>
+                                <label for="penginapan" class="ms-2 text-sm font-bold text-blue-400">Penginapan (Rp.
+                                    <?= number_format($pesanan['harga_penginapan'], 0, ',', '.') ?>)</label>
                             </div>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
                             <div class="flex items-center mb-4">
                                 <input id="makan" type="checkbox" value=""
-                                    class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="makan" class="ms-2 text-sm font-bold text-[#95E681]">Makan (Rp.
-                                    <?= number_format($wisata['harga_makan'], 0, ',', '.') ?>)</label>
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    <?= $pesanan['makan'] == 0 ? '' : 'checked' ?>>
+                                <label for="makan" class="ms-2 text-sm font-bold text-blue-400">Makan (Rp.
+                                    <?= number_format($pesanan['harga_makan'], 0, ',', '.') ?>)</label>
                             </div>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
@@ -103,15 +112,15 @@ include '../layout/navbar.php';
                             </label>
                             <input type="number" id="jumlah_orang" name="jumlah_orang"
                                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
-                                placeholder="Jumlah..." required />
+                                placeholder="Jumlah..." required value="<?php echo $pesanan['jumlah_orang'] ?>" />
                         </div>
                     </div>
 
                     <button name="submit" type="submit"
-                        class="text-white bg-green-500 hover:bg-[#95E681] focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">Pesan
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Edit
                         Paket Wisata</button>
                     <button onclick="hitung()" type="button"
-                        class="text-white bg-[#95E681]  focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2  dark:hover:bg-green focus:outline-none">Hitung
+                        class="text-white bg-green-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2  dark:hover:bg-green focus:outline-none">Hitung
                         Total</button>
                 </form>
 
@@ -122,24 +131,24 @@ include '../layout/navbar.php';
                             <dl class="flex items-center justify-between gap-4">
                                 <dt class="text-base font-normal text-gray-500 dark:text-gray-400">Transportasi</dt>
                                 <dd id="harga-transportasi" class="text-base font-medium text-gray-900 dark:text-white">
-                                    Rp. <?= number_format(0, 0, ',', '.') ?></dd>
+                                    Rp. <?= number_format($pesanan['transportasi'], 0, ',', '.') ?></dd>
                             </dl>
                             <dl class="flex items-center justify-between gap-4">
                                 <dt class="text-base font-normal text-gray-500 dark:text-gray-400">penginapan</dt>
                                 <dd id="harga-penginapan" class="text-base font-medium text-gray-900 dark:text-white">
-                                    Rp. <?= number_format(0, 0, ',', '.') ?></dd>
+                                    Rp. <?= number_format($pesanan['penginapan'], 0, ',', '.') ?></dd>
                             </dl>
 
                             <dl class="flex items-center justify-between gap-4">
                                 <dt class="text-base font-normal text-gray-500 dark:text-gray-400">Makan</dt>
                                 <dd id="harga-makan" class="text-base font-medium text-gray-900 dark:text-white">Rp.
-                                    <?= number_format(0, 0, ',', '.') ?>
+                                    <?= number_format($pesanan['makan'], 0, ',', '.') ?>
                                 </dd>
                             </dl>
                             <dl class="flex items-center justify-between gap-4">
                                 <dt class="text-base font-normal text-gray-500 dark:text-gray-400"></dt>
                                 <dd id="total-sementara" class="text-base font-medium text-gray-900 dark:text-white">Rp.
-                                    <?= number_format(0, 0, ',', '.') ?>
+                                    <?= number_format((($pesanan['transportasi'] + $pesanan['penginapan'] + $pesanan['makan']) * $pesanan['jumlah_orang'] * $pesanan['waktu_perjalanan']), 0, ',', '.') ?>
                                 </dd>
                             </dl>
                         </div>
@@ -148,7 +157,7 @@ include '../layout/navbar.php';
                             class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
                             <dt class="text-base font-bold text-gray-900 dark:text-white">Total</dt>
                             <dd id="total" class="text-base font-bold text-gray-900 dark:text-white">Rp.
-                                <?= number_format(0, 0, ',', '.') ?>
+                                <?= number_format($pesanan['total_bayar'], 0, ',', '.') ?>
                             </dd>
                         </dl>
                     </div>
@@ -156,8 +165,11 @@ include '../layout/navbar.php';
             </div>
         </div>
     </div>
+    </div>
 </section>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/datepicker.min.js"></script>
+
+
 <script>
     function hitung() {
         // rumus
@@ -167,9 +179,9 @@ include '../layout/navbar.php';
         // 2 * 2 * total = 4.120.000
 
         // harga-harga
-        const hargaTransportasi = <?= $wisata['harga_transportasi'] ?>;
-        const hargaPenginapan = <?= $wisata['harga_penginapan'] ?>;
-        const hargaMakan = <?= $wisata['harga_makan'] ?>;
+        const hargaTransportasi = <?= $pesanan['harga_transportasi'] ?>;
+        const hargaPenginapan = <?= $pesanan['harga_penginapan'] ?>;
+        const hargaMakan = <?= $pesanan['harga_makan'] ?>;
 
         // ambil data dari form
         const waktuPerjalanan = document.getElementById('waktu_perjalanan').value;
@@ -208,7 +220,7 @@ include '../layout/navbar.php';
                 totalHarga += hargaMakan;
                 hargaMakanElement.innerText = `Rp. ${new Intl.NumberFormat().format(hargaMakan)}`;
             } else {
-                hargaMakanElement.innerText = `Rp. ${new Intl.NumberFormat().format(0).replace(',', '.')}`;
+                hargaMakanElement.innerText = `Rp. ${new Intl.NumberFormat().format(0)}`;
             }
 
             total.innerText = `Rp. ${new Intl.NumberFormat().format(totalHarga * waktuPerjalanan * jumlahOrang)}`;
@@ -225,6 +237,7 @@ include '../layout/navbar.php';
 
     }
 </script>
+
 <?php
 include '../layout/footer.php';
 ?>

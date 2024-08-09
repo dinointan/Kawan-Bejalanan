@@ -39,7 +39,7 @@ include '../layout/navbar.php';
                     Total Bayar
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    <span class="sr-only">Edit</span>
+                    Action
                 </th>
             </tr>
         </thead>
@@ -91,7 +91,8 @@ include '../layout/navbar.php';
                                     ${data.pesanan.total_bayar}
                                 </td>
                                 <td class="px-6 py-4 text-right">
-                                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                    <a href="/pesanan/edit_pesanan.php?id=${data.pesanan.id}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                    <a href="/pesanan/hapus_pesanan.php?pesanan=${data.pesanan.id}" class="font-medium text-red-600 dark:text-red-500 hover:underline">Hapus</a>
                                 </td>
                             </tr>
                         `;
